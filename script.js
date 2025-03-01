@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const fabButton = document.getElementById('fabButton');
     const fabMenu = document.getElementById('fabMenu');
-    const chatModal = document.querySelector('.ai-chat-modal');
+    const chatPanel = document.querySelector('.ai-chat-panel');
     const closeButton = document.querySelector('.close-chat-button');
     const sendButton = document.querySelector('.send-button');
     const textarea = document.querySelector('.chat-input textarea');
     const messagesContainer = document.querySelector('.chat-messages');
     const overlay = document.querySelector('.fab-overlay');
+    const body = document.body;
 
     // ヒントボタンのクリックハンドラ
     fabButton.addEventListener('click', function() {
@@ -22,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (action === 'ai') {
                 // AIと一緒に進めるを選択した場合
-                chatModal.classList.add('active');
-                overlay.classList.add('active'); // チャットモーダル表示時もオーバーレイを表示
+                body.classList.add('chat-panel-open');
+                overlay.classList.remove('active'); // オーバーレイは不要
             }
             
             // メニューを閉じる
@@ -36,15 +37,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // FABメニューを閉じる
         fabMenu.classList.remove('active');
         overlay.classList.remove('active');
-        
-        // チャットモーダルも閉じる
-        chatModal.classList.remove('active');
     });
 
-    // チャットモーダルを閉じる（×ボタン）
+    // チャットパネルを閉じる（×ボタン）
     closeButton.addEventListener('click', function() {
-        chatModal.classList.remove('active');
-        overlay.classList.remove('active'); // オーバーレイも非表示
+        body.classList.remove('chat-panel-open');
+    });
+
+    // ESCキーでチャットパネルを閉じる
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && body.classList.contains('chat-panel-open')) {
+            body.classList.remove('chat-panel-open');
+        }
     });
 
     // メッセージ送信処理
