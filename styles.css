@@ -1375,4 +1375,49 @@ body {
 /* チャットパネル表示時の講義コンテンツ */
 .chat-panel-open .lecture-content {
     width: 100%; /* 幅を100%に */
+}
+
+/* メッセージ選択肢 */
+.message-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    padding-left: 16px; /* AIメッセージに合わせる */
+}
+
+.choice-button {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.choice-button:hover {
+    background: #f5f8ff;
+    border-color: var(--primary);
+}
+
+.choice-button:active {
+    transform: scale(0.98);
+}
+
+/* モバイル用の選択肢スタイル調整 */
+@media (max-width: 767px) {
+    .message-choices {
+        padding-left: 0;
+        overflow-x: auto;
+        padding-bottom: 8px; /* スクロールバー用の余白 */
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .choice-button {
+        flex-shrink: 0;
+    }
 } 

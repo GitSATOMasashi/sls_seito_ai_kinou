@@ -70,6 +70,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 最下部にスクロール
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // 既存の選択肢を非表示にする
+            hideAllChoices();
+            
+            // AIの応答を表示（実際のシステムでは応答生成）
+            setTimeout(function() {
+                displayAIResponse(message);
+            }, 500);
         }
     }
 
@@ -162,5 +170,90 @@ document.addEventListener('DOMContentLoaded', function() {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         }
+    }
+
+    // 選択肢ボタンのクリックイベント
+    messagesContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('choice-button')) {
+            const choiceText = e.target.textContent;
+            const choicesContainer = e.target.closest('.message-choices');
+            
+            // ユーザーメッセージとして選択肢を表示
+            const userMessageHTML = `
+                <div class="message user-message">
+                    <div class="message-content">${choiceText}</div>
+                </div>
+            `;
+            messagesContainer.insertAdjacentHTML('beforeend', userMessageHTML);
+            
+            // 選択肢グループを非表示
+            choicesContainer.style.display = 'none';
+            
+            // 最下部にスクロール
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // AIの応答を表示（実際のシステムでは応答生成）
+            setTimeout(function() {
+                displayAIResponse(choiceText);
+            }, 500);
+        }
+    });
+
+    // すべての選択肢を非表示にする関数
+    function hideAllChoices() {
+        const allChoices = document.querySelectorAll('.message-choices');
+        allChoices.forEach(choices => {
+            choices.style.display = 'none';
+        });
+    }
+
+    // AIの応答を表示する関数（サンプル）
+    function displayAIResponse(userMessage) {
+        // ユーザーメッセージに基づいて応答を生成（実際はAIが生成）
+        let aiResponse = '';
+        let choices = [];
+        
+        if (userMessage.includes('課題に寄り添う')) {
+            aiResponse = '顧客の課題に寄り添うとは、商品やサービスの機能説明ではなく、顧客が抱える本質的な問題を理解し、解決策として提案することです。例えば、「このシステムは多機能です」ではなく、「チームの情報共有の課題を解決し、30%の生産性向上が見込めます」と伝えます。';
+            choices = [
+                '具体的な事例を教えて', 
+                '感情に訴えかける方法は？', 
+                'クロージングのコツは？',
+                '課題の見つけ方は？',
+                '顧客との信頼関係の築き方は？'
+            ];
+        } else if (userMessage.includes('感情に訴えかける')) {
+            aiResponse = '感情に訴えかけるテクニックは、論理的なメリットだけでなく、導入後の感情的な変化や体験を想像させることです。ストーリーテリングやビフォーアフターの対比、共感の言葉を使うことが効果的です。';
+            choices = [
+                '具体的な言い回しを教えて', 
+                '成功事例はありますか？', 
+                '他のテクニックはありますか？',
+                'ストーリーテリングのコツは？',
+                '共感の示し方について詳しく'
+            ];
+        } else {
+            aiResponse = 'クロージングでは、顧客のニーズに合わせた提案と、具体的な次のステップを明確に示すことが重要です。「ぜひ検討してください」ではなく、「来週のミーティングで具体的な導入計画をご提案しますが、水曜日の15時はいかがでしょうか」など、アクションを促す質問が効果的です。';
+            choices = [
+                '他のクロージング例は？', 
+                '断られた場合の対処法は？', 
+                'フォローアップの方法は？',
+                '価格交渉のテクニックは？',
+                '決裁者へのアプローチ方法は？'
+            ];
+        }
+        
+        // AIメッセージを追加
+        const aiMessageHTML = `
+            <div class="message ai-message">
+                <div class="message-content">${aiResponse}</div>
+                <div class="message-choices">
+                    ${choices.map(choice => `<button class="choice-button">${choice}</button>`).join('')}
+                </div>
+            </div>
+        `;
+        messagesContainer.insertAdjacentHTML('beforeend', aiMessageHTML);
+        
+        // 最下部にスクロール
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 }); 
