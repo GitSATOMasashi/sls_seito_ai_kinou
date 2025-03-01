@@ -1250,7 +1250,7 @@ body {
     }
 }
 
-/* AIチャットパネル (旧モーダルを置き換え) */
+/* AIチャットパネル */
 .ai-chat-panel {
     position: fixed;
     top: var(--header-height);
@@ -1262,8 +1262,26 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 1001;
-    transition: right 0.3s ease;
+    transition: right 0.3s ease; /* 幅のトランジションは含めない */
     overflow: hidden;
+}
+
+/* リサイズハンドル */
+.chat-panel-resize-handle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    cursor: ew-resize;
+    background: transparent;
+    z-index: 1002; /* パネルより上に表示 */
+}
+
+/* リサイズ中のスタイル */
+.resizing {
+    user-select: none;
+    cursor: ew-resize;
 }
 
 /* チャットパネルが開いているとき */
@@ -1303,9 +1321,16 @@ body {
 @media (max-width: 767px) {
     /* モバイルサイズでのチャットパネル */
     .ai-chat-panel {
-        width: 100%;
-        right: -100%;
+        width: 100vw; /* ビューポート幅を使用 */
+        right: -100vw; /* ビューポート幅分右に配置 */
+        left: auto; /* leftプロパティをリセット */
         z-index: 1010; /* サイドバーより上に */
+        position: fixed; /* 位置を固定 */
+    }
+    
+    /* モバイル表示時のbody */
+    .chat-panel-open {
+        overflow: hidden; /* パネル表示時のスクロールを防止 */
     }
     
     .chat-panel-open .main-container {
@@ -1324,6 +1349,10 @@ body {
     /* 戻るボタンを追加 */
     .chat-header .back-button {
         display: block;
+    }
+
+    .chat-panel-open .ai-chat-panel {
+        right: 40px;
     }
 }
 

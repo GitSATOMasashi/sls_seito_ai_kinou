@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
     const overlay = document.querySelector('.fab-overlay');
     const body = document.body;
+    const resizeHandle = document.querySelector('.chat-panel-resize-handle');
+    const mainContainer = document.querySelector('.main-container');
 
     // ヒントボタンのクリックハンドラ
     fabButton.addEventListener('click', function() {
@@ -119,4 +121,46 @@ document.addEventListener('DOMContentLoaded', function() {
             checklistModal.classList.remove('active');
         }
     });
+
+    // チャットパネルのリサイズ機能
+    if (resizeHandle) {
+        let isResizing = false;
+        let startX, startWidth;
+
+        resizeHandle.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = parseInt(document.defaultView.getComputedStyle(chatPanel).width, 10);
+            document.body.classList.add('resizing');
+            
+            // イベントリスナーを追加
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            e.preventDefault();
+        });
+
+        function handleMouseMove(e) {
+            if (!isResizing) return;
+            
+            // マウス移動量から新しい幅を計算
+            const width = startWidth - (e.clientX - startX);
+            
+            // 最小幅と最大幅を設定
+            if (width >= 300 && width <= 600) {
+                chatPanel.style.width = width + 'px';
+                
+                // メインコンテナの幅も調整
+                if (window.innerWidth > 767) { // モバイル以外の場合のみ
+                    mainContainer.style.width = `calc(100% - var(--sidebar-width) - ${width + 60}px)`;
+                }
+            }
+        }
+
+        function handleMouseUp() {
+            isResizing = false;
+            document.body.classList.remove('resizing');
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        }
+    }
 }); 
